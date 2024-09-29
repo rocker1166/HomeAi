@@ -1,139 +1,150 @@
-"use client";
+'use client'
 
-import { ReactNode, useRef, useState } from "react";
-import { useActions } from "ai/rsc";
-import { Message } from "@/components/message";
-import { useScrollToBottom } from "@/components/use-scroll-to-bottom";
-import { motion } from "framer-motion";
-import { MasonryIcon, VercelIcon } from "@/components/icons";
-import Link from "next/link";
+import { ReactNode, useRef, useState } from "react"
+import { useActions } from "ai/rsc"
+import { Message } from "@/components/message"
+import { useScrollToBottom } from "@/components/use-scroll-to-bottom"
+import { motion, AnimatePresence } from "framer-motion"
+import { MasonryIcon, VercelIcon } from "@/components/icons"
+import Link from "next/link"
+import { Home, Lightbulb, Thermometer, Camera, Droplet, Zap } from 'lucide-react'
 
-export default function Home() {
-  const { sendMessage } = useActions();
+export default function Home1() {
+  const { sendMessage } = useActions()
 
-  const [input, setInput] = useState<string>("");
-  const [messages, setMessages] = useState<Array<ReactNode>>([]);
+  const [input, setInput] = useState<string>("")
+  const [messages, setMessages] = useState<Array<ReactNode>>([])
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
   const [messagesContainerRef, messagesEndRef] =
-    useScrollToBottom<HTMLDivElement>();
+    useScrollToBottom<HTMLDivElement>()
 
   const suggestedActions = [
-    { title: "View all", label: "my cameras", action: "View all my cameras" },
-    { title: "Show me", label: "my smart home hub", action: "Show me my smart home hub" },
-    {
-      title: "How much",
-      label: "electricity have I used this month?",
-      action: "Show electricity usage",
-    },
-    {
-      title: "How much",
-      label: "water have I used this month?",
-      action: "Show water usage",
-    },
-  ];
+    { icon: <Camera className="w-5 h-5" />, title: "View all", label: "my cameras", action: "View all my cameras" },
+    { icon: <Home className="w-5 h-5" />, title: "Show me", label: "my smart home hub", action: "Show me my smart home hub" },
+    { icon: <Zap className="w-5 h-5" />, title: "How much", label: "electricity used this month?", action: "Show electricity usage" },
+    { icon: <Droplet className="w-5 h-5" />, title: "How much", label: "water used this month?", action: "Show water usage" },
+  ]
 
   return (
-    <div className="flex flex-row justify-center pb-20 h-dvh bg-white dark:bg-zinc-900">
-      <div className="flex flex-col justify-between gap-4">
-        <div
-          ref={messagesContainerRef}
-          className="flex flex-col gap-3 h-full w-dvw items-center overflow-y-scroll"
-        >
-          {messages.length === 0 && (
-            <motion.div className="h-[350px] px-4 w-full md:w-[500px] md:px-0 pt-20">
-              <div className="border rounded-lg p-6 flex flex-col gap-4 text-zinc-500 text-sm dark:text-zinc-400 dark:border-zinc-700">
-                <p className="flex flex-row justify-center gap-4 items-center text-zinc-900 dark:text-zinc-50">
-                  <VercelIcon size={16} />
-                  <span>+</span>
-                  <MasonryIcon />
-                </p>
-                <p>
-                  The streamUI function allows you to stream React Server
-                  Components along with your language model generations to
-                  integrate dynamic user interfaces into your application.
-                </p>
-                <p>
-                  {" "}
-                  Learn more about the{" "}
-                  <Link
-                    className="text-blue-500 dark:text-blue-400"
-                    href="https://sdk.vercel.ai/docs/ai-sdk-rsc/streaming-react-components"
-                    target="_blank"
-                  >
-                    streamUI{" "}
-                  </Link>
-                  hook from Vercel AI SDK.
-                </p>
-              </div>
-            </motion.div>
-          )}
-          {messages.map((message) => message)}
-          <div ref={messagesEndRef} />
+    <div className="flex flex-col justify-between min-h-dvh bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950">
+      <header className="bg-white dark:bg-gray-800 shadow-md p-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">SmartHome AI</h1>
+          <div className="flex items-center space-x-2">
+            <Lightbulb className="w-6 h-6 text-yellow-500" />
+            <Thermometer className="w-6 h-6 text-red-500" />
+            <Camera className="w-6 h-6 text-green-500" />
+          </div>
         </div>
+      </header>
 
-        <div className="grid sm:grid-cols-2 gap-2 w-full px-4 md:px-0 mx-auto md:max-w-[500px] mb-4">
-          {messages.length === 0 &&
-            suggestedActions.map((action, index) => (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.01 * index }}
-                key={index}
-                className={index > 1 ? "hidden sm:block" : "block"}
-              >
-                <button
+      <main className="flex-grow overflow-hidden flex flex-col">
+        <div className="max-w-4xl mx-auto p-4 flex-grow flex flex-col">
+          <div
+            ref={messagesContainerRef}
+            className="flex-grow overflow-y-auto space-y-4 pb-4"
+          >
+            <AnimatePresence>
+              {messages.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-4"
+                >
+                  <h2 className="text-xl font-semibold mb-4 text-indigo-600 dark:text-indigo-400">Welcome to Your Smart Home Assistant</h2>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    Im here to help you manage your smart home. Ask me anything about your devices, energy usage, or home automation!
+                  </p>
+                  <div className="flex items-center justify-center space-x-2 text-gray-400">
+                    <VercelIcon size={20} />
+                    <span>+</span>
+                    <MasonryIcon  />
+                  </div>
+                </motion.div>
+              ) : (
+                messages.map((message, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {message}
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+      </main>
+
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <div>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Suggested Actions:</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {suggestedActions.map((action, index) => (
+                <motion.button
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
                   onClick={async () => {
                     setMessages((messages) => [
                       ...messages,
-                      <Message
-                        key={messages.length}
-                        role="user"
-                        content={action.action}
-                      />,
-                    ]);
-                    const response: ReactNode = await sendMessage(
-                      action.action,
-                    );
-                    setMessages((messages) => [...messages, response]);
+                      <Message key={messages.length} role="user" content={action.action} />,
+                    ])
+                    const response: ReactNode = await sendMessage(action.action)
+                    setMessages((messages) => [...messages, response])
                   }}
-                  className="w-full text-left border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 rounded-lg p-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex flex-col"
+                  className="flex items-center space-x-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                 >
-                  <span className="font-medium">{action.title}</span>
-                  <span className="text-zinc-500 dark:text-zinc-400">
-                    {action.label}
-                  </span>
-                </button>
-              </motion.div>
-            ))}
-        </div>
-
-        <form
-          className="flex flex-col gap-2 relative items-center"
-          onSubmit={async (event) => {
-            event.preventDefault();
-
-            setMessages((messages) => [
-              ...messages,
-              <Message key={messages.length} role="user" content={input} />,
-            ]);
-            setInput("");
-
-            const response: ReactNode = await sendMessage(input);
-            setMessages((messages) => [...messages, response]);
-          }}
-        >
-          <input
-            ref={inputRef}
-            className="bg-zinc-100 rounded-md px-2 py-1.5 w-full outline-none dark:bg-zinc-700 text-zinc-800 dark:text-zinc-300 md:max-w-[500px] max-w-[calc(100dvw-32px)]"
-            placeholder="Send a message..."
-            value={input}
-            onChange={(event) => {
-              setInput(event.target.value);
+                  <div className="flex-shrink-0 text-indigo-500 dark:text-indigo-400">
+                    {action.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{action.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{action.label}</p>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+          <form
+            className="flex items-center space-x-2"
+            onSubmit={async (event) => {
+              event.preventDefault()
+              setMessages((messages) => [
+                ...messages,
+                <Message key={messages.length} role="user" content={input} />,
+              ])
+              setInput("")
+              const response: ReactNode = await sendMessage(input)
+              setMessages((messages) => [...messages, response])
             }}
-          />
-        </form>
-      </div>
+          >
+            <input
+              ref={inputRef}
+              className="flex-grow bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 text-gray-800 dark:text-gray-200"
+              placeholder="Ask your smart home assistant..."
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+            <button
+            title="fe"
+              type="submit"
+              className="bg-indigo-500 text-white rounded-full p-2 hover:bg-indigo-600 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
